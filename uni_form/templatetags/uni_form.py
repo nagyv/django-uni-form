@@ -1,6 +1,8 @@
+import re
 from django.template import Context, Template
 from django.template.loader import get_template
 from django import template
+from django.utils.translation import gettext as _
 
 from django.template.defaultfilters import slugify
 
@@ -218,3 +220,62 @@ class UniFormJqueryNode(BasicNode):
         
         template = get_template('uni_form/uni_form_jquery.html')
         return template.render(c)   
+
+###################
+# uni_form_wizard #
+###################
+
+@register.tag(name="uni_form_wizard")
+def uni_form_wizard(parser, token):
+    '''
+    Should be called as
+    {% uni_form_wizard form step_field step0 previous_fields helper %}
+    '''
+    token = token.split_contents()
+    try:
+        form = token.pop(1)
+        step_field = token.pop(1)
+        step0 = token.pop(1)
+        previous_fields = token.pop(1)
+        helper = token.pop(1)
+    except IndexError:
+        template.TemplateSyntaxError, '%s requires 5 argument' % \
+            token.split_contents()[0]
+
+    return UniFormWizardNode(form, step_field, step0, previous_fields, helper)
+
+class UniFormWizardNode(UniFormNode):
+
+    def __init__(self, form, step_field, step0, previous_fields, helper):
+        super(UniFormWizardNode, self).__init__(form, helper)
+        self.step_field = template.Variable(step_field)
+        self.step0 = template.Variable(step0)
+        self.previous_fields = template.Variable(previous_fields)
+
+    def get_render(self, context):
+        if not self.helper.resolve(context):
+            raise AttributeError, "The FormHelper ``%s`` is not available in the template context" % self.helper.var
+        c = super(UniFormWizardNode, self).get_render(context)
+
+        class Input(object):
+            def __init__(self, type, name, value):
+                self.input_type = type
+                self.name = name
+                self.value = value
+
+        # this way an empty helper object works as well
+        if c.dicts[0]['inputs'] == []:
+            c.dicts[0]['inputs'].append(Input('submit', 'submit', _('Submit')))
+        # add the wizard_step element
+        step_field = self.step_field.resolve(context)
+        step0 = self.step0.resolve(context)
+        c.dicts[0]['inputs'].append(Input('hidden', step_field, step0))
+
+        # add the other elements
+        previous_fields = self.previous_fields.resolve(context)
+        p = re.compile('(?:<input type="(hidden)" name="([\w-]+)" value="([^"]*)" (?:id="[^"]*"\s/|/)?>)+?')
+        for input in p.findall(previous_fields):
+            c.dicts[0]['inputs'].append(Input(*input))
+
+        return c
+
