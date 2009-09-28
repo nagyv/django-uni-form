@@ -23,6 +23,12 @@ def as_uni_form(form):
     return template.render(c)
 
 @register.filter
+def as_uni_form_set(formset):
+    template = get_template('uni_form/uni_form_set.html')
+    c = Context({'formset':formset})
+    return template.render(c)
+
+@register.filter
 def as_uni_errors(form):
     template = get_template('uni_form/errors.html')
     c = Context({'form':form})
@@ -80,6 +86,7 @@ class BasicNode(template.Node):
             form_id = attrs.get("id", "")
             inputs = attrs.get('inputs', [])
             toggle_fields = attrs.get('toggle_fields', set(()))
+            buttons = ["button", "submit", "reset"]
         final_toggle_fields = []
         if toggle_fields:
             final_toggle_fields = []
@@ -100,7 +107,8 @@ class BasicNode(template.Node):
                         'form_class' : form_class,
                         'form_id' : form_id,
                         'inputs' : inputs,
-                        'toggle_fields': final_toggle_fields
+                        'toggle_fields': final_toggle_fields,
+                        'buttons': buttons,
                         }
         c = Context(response_dict)
         return c

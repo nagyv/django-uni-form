@@ -12,13 +12,13 @@
 				{{ field|with_class }}
 				{% if field.label %}
 	                <label for="{{ field.auto_id }}">                    
-	                    {{ field.label }}{% if field.field.required %}*{% endif %}
+	                    {{ field.label }}{% if field.field.required %}<em>*</em>{% endif %}
 	                </label>
 	            {% endif %}		
 			{% else %}
 				{% if field.label %}
 	                <label for="{{ field.auto_id }}">                    
-	                    {{ field.label }}{% if field.field.required %}*{% endif %}
+	                    {{ field.label }}{% if field.field.required %}<em>*</em>{% endif %}
 	                </label>
 	            {% endif %}			
 	            {{ field|with_class }}
