@@ -203,6 +203,7 @@ class FormHelper(object):
     def __init__(self):
         self._form_method = 'POST'
         self._form_action = ''
+        self.multipart = False
         self.form_id = ''
         self.form_class = ''
         self.inputs = []
@@ -260,5 +261,7 @@ class FormHelper(object):
             items['inputs'] = self.inputs
         if self.toggle.fields:
             items['toggle_fields'] = self.toggle.fields
+        if self.multipart:
+            items['multipart'] = self.multipart
         return items
         

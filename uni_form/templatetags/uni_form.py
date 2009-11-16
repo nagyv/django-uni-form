@@ -87,6 +87,7 @@ class BasicNode(template.Node):
             inputs = attrs.get('inputs', [])
             toggle_fields = attrs.get('toggle_fields', set(()))
             buttons = ["button", "submit", "reset"]
+            multipart = attrs.get("multipart", False)
         final_toggle_fields = []
         if toggle_fields:
             final_toggle_fields = []
@@ -109,6 +110,7 @@ class BasicNode(template.Node):
                         'inputs' : inputs,
                         'toggle_fields': final_toggle_fields,
                         'buttons': buttons,
+                        'multipart': multipart,
                         }
         c = Context(response_dict)
         return c
