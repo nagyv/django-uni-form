@@ -1,4 +1,5 @@
 import re
+from django.conf import settings
 from django.template import Context, Template
 from django.template.loader import get_template
 from django import template
@@ -39,6 +40,15 @@ def as_uni_field(field):
     template = get_template('uni_form/field.html')
     c = Context({'field':field})
     return template.render(c)
+
+@register.inclusion_tag('uni_form/css_head.html')
+def uni_form_css():
+    return {'MEDIA_URL':settings.MEDIA_URL}
+    template = get_template('uni_form/css_head.html')
+    c = Context()
+    html = template.render(c)
+    print html
+    return html
 
 ############################################################################
 #
