@@ -50,6 +50,10 @@ def uni_form_css():
     print html
     return html
 
+@register.inclusion_tag('uni_form/submit_button.html')
+def uni_form_submit():
+    return {}
+
 ############################################################################
 #
 # Everything from now on gets more fancy
