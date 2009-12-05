@@ -43,7 +43,7 @@ def as_uni_field(field):
 
 @register.inclusion_tag('uni_form/css_head.html')
 def uni_form_css():
-    return {'MEDIA_URL':settings.MEDIA_URL}
+    return {'MEDIA_URL':getattr(settings, 'STATIC_URL', 'MEDIA_URL')}
     template = get_template('uni_form/css_head.html')
     c = Context()
     html = template.render(c)
