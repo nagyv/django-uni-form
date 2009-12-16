@@ -94,6 +94,7 @@ class BasicNode(template.Node):
         inputs = []
         toggle_fields = set(())
         if attrs:
+            form_tag = attrs.get("add_form_tag", True)
             form_method = attrs.get("form_method", 'POST')
             form_action = attrs.get("form_action", '')
             form_class = attrs.get("class", '')
@@ -115,6 +116,7 @@ class BasicNode(template.Node):
             form_html = ""
         response_dict = {
                         'form':actual_form,
+                        'form_tag': form_tag,
                         'form_html':form_html,
                         'form_action':form_action,
                         'form_method':form_method,

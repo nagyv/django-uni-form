@@ -209,6 +209,7 @@ class FormHelper(object):
         self.inputs = []
         self.toggle = Toggle()
         self.layout = None
+        self.add_form_tag = True
     
     def get_form_method(self):
         return self._form_method
@@ -250,6 +251,7 @@ class FormHelper(object):
     def get_attr(self):
         items = {}
         items['form_method'] = self.form_method.strip()
+        items['add_form_tag'] = self.add_form_tag
         
         if self.form_action:
             items['form_action'] = self.form_action.strip()
